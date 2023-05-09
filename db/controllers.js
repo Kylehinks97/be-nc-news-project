@@ -1,14 +1,28 @@
-const { selectTopics } = require("./models.js")
+//models
+const { selectTopics } = require("./models.js");
+const fs = require("fs");
 
 exports.getTopics = (req, res) => {
-    console.log("in controller");
-    selectTopics()
+  console.log("in controller");
+  selectTopics()
     .then((result) => {
-        console.log(result.rows);
-        res.status(200).send({ topics: result.rows })
+      console.log(result.rows);
+      res.status(200).send({ topics: result.rows });
     })
     .catch((err) => {
-        if (err) console.log(err);
-        res.status(500).send({msg: "server error"})
-    })
-}
+      if (err) console.log(err);
+      res.status(500).send({ msg: "server error" });
+    });
+};
+
+exports.getEndpoints = (req, res) => {
+  return fs.readFile("endpoints.json", `utf-8`, (err, data) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send("Couldn't read endpoints.json");
+    } else {
+    const parsedEndpoints = JSON.parse(data)
+      res.send({ endpoints: parsedEndpoints});
+    }
+  });
+};
