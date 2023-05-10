@@ -12,10 +12,10 @@ afterAll(() => {
   return connection.end();
 });
 
-describe.skip("TASK 3 -- api/topics", () => {
+describe("TASK 3 -- api/topics", () => {
   it("GET - status: 200 - responds with array of snacks", () => {
     return request(app)
-      .get("GET - /api/topics")
+      .get("/api/topics")
       .then((response) => {
         expect(response.body.topics.length).toBe(3);
         response.body.topics.forEach((topic) => {

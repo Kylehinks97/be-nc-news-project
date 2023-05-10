@@ -3,10 +3,8 @@ const { selectTopics } = require("./models.js");
 const fs = require("fs");
 
 exports.getTopics = (req, res) => {
-  console.log("in controller");
   selectTopics()
     .then((result) => {
-      console.log(result.rows);
       res.status(200).send({ topics: result.rows });
     })
     .catch((err) => {
