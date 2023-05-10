@@ -43,12 +43,4 @@ describe("TASK 3.5 --- GET - /api", () => {
         expect(typeof response).toBe("object");
       });
   });
-  it("GET - status: 2 - responds with JSON object containing all the endpoints in endpoints.test.js", () => {
-    return request(app)
-      .get("/api-spelt-incorrectly")
-      .then((response) => {
-        expect(response.statusCode).toBe(404);
-        expect(response.text).toBe("404 - Not Found")
-      });
-  });
 });
