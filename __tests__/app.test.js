@@ -41,12 +41,11 @@ describe("TASK 3.5 --- GET - /api", () => {
       });
   });
 });
-describe.only("TASK 4 --- GET - /api/articles/:article_id", () => {
+describe("TASK 4 --- GET - /api/articles/:article_id", () => {
   it("GET - status: 200 - responds with JSON object containing correct article contents", () => {
     return request(app)
       .get("/api/articles/1")
-      .then((response) => {
-        console.log(response.body)
+      .then((response) => {     
         expect(response.body.result.article_id).toBe(1)
         expect(response.body.result.title).toBe("Living in the shadow of a great man");
         expect(response.body.result.topic).toBe("mitch");
