@@ -9,3 +9,12 @@ exports.selectTopics = () => {
       return result;
     });
 };
+exports.selectArticleById = (id) => {
+  return db.query(`
+  SELECT * FROM articles WHERE article_id = $1
+  `, [id])
+    .then((result) => {
+      const article = result.rows
+      return article[0]
+    })
+}
