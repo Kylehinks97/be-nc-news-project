@@ -14,7 +14,10 @@ exports.selectArticleById = (id) => {
   SELECT * FROM articles WHERE article_id = $1
   `, [id])
     .then((result) => {
-      const article = result.rows
-      return article[0]
+      if (result.rows.length === 0 ) {
+        return Promise.reject({status: 404,  msg: "Not Found"})
+      } else {
+        return result.rows[0]
+      }
     })
 }

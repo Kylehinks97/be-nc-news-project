@@ -23,15 +23,13 @@ exports.getEndpoints = (req, res) => {
     }
   });
 };
-exports.getArticleById = (req, res) => {
-  const id  = req.params.article_id
-  console.log(id);
+exports.getArticleById = (req, res, next) => {
+  const id = req.params.article_id;
   selectArticleById(id)
     .then((result) => {
-      res.status(200).send({result});
-  })
+      res.status(200).send({ article: result });
+    })
     .catch((err) => {
-      if (err) console.log(err);
-      res.status(400).send({ msg: "Bad Request" });
+      next(err);
     });
 };
