@@ -3,6 +3,7 @@ const request = require("supertest");
 const connection = require("../db/connection.js");
 const seed = require("../db/seeds/seed.js");
 const data = require("../db/data/test-data/index.js");
+const sorted = require("jest-sorted")
 
 beforeEach(() => {
   return seed(data);
@@ -71,6 +72,47 @@ describe("TASK 4 --- GET - /api/articles/:article_id", () => {
     .then((response) => {
       expect(response.statusCode).toBe(404)
       expect(response.body).toEqual({ msg: "Not Found" })
+    })
+  });
+});
+describe('TASK 5 --- GET - /api/articles', () => {
+  it('GET - status: 200 - returns array of articles that have the correct shape and data-types', () => {
+    return request(app)
+    .get(`/api/articles`)
+    .expect(200)
+    .then((response) => {
+      expect(response.body.articles.length).toBe(12)
+      response.body.articles.forEach((item) => {
+        expect(typeof item.article_id).toBe("number")
+        expect(typeof item.title).toBe("string")
+        expect(typeof item.topic).toBe("string")
+        expect(typeof item.author).toBe("string")
+        expect(typeof item.created_at).toBe("string")
+        expect(typeof item.votes).toBe("number")
+        expect(typeof item.comment_count).toBe("string")
+      })
+    })
+  });
+  it('GET - status: 200 - returns correctly counted comments for a given article', () => {
+    return request(app)
+    .get(`/api/articles`)
+    .expect(200)
+    .then((response) => {
+      response.body.articles.forEach((item) => {
+        if (item.article_id === 1) {
+          expect(item.comment_count).toBe("11")
+        }
+      })
+    })
+  });
+  it('GET - status: 200 - returns correctly sorted comments for a given article ', () => {
+    return request(app)
+    .get(`/api/articles`)
+    .expect(200)
+    .then((response) => {
+      expect(response.body.articles).toBeSortedBy(`created_at`, {
+        descending: true,
+      })
     })
   });
 });
