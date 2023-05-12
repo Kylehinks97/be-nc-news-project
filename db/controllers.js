@@ -1,5 +1,5 @@
 //models
-const { selectTopics, selectArticleById } = require("./models.js");
+const { selectTopics, selectArticleById, selectCommentsByArticleId } = require("./models.js");
 const fs = require("fs");
 
 exports.getTopics = (req, res) => {
@@ -33,3 +33,15 @@ exports.getArticleById = (req, res, next) => {
       next(err);
     });
 };
+exports.getCommentsByArticleId = (req, res, next) => {
+  console.log("in controller");
+  const id = req.params.article_id
+  selectCommentsByArticleId(id)
+  .then((result) => {
+    console.log(result);
+    res.status(200).send({ comments: result })
+  })
+  .catch((err) => {
+    next(err)
+  })
+}

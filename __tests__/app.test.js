@@ -46,7 +46,7 @@ describe("TASK 4 --- GET - /api/articles/:article_id", () => {
     return request(app)
       .get("/api/articles/1")
       .expect(200)
-      .then((response) => {    
+      .then((response) => {  
         expect(response.body.article.article_id).toBe(1)
         expect(response.body.article.title).toBe("Living in the shadow of a great man");
         expect(response.body.article.topic).toBe("mitch");
@@ -74,3 +74,21 @@ describe("TASK 4 --- GET - /api/articles/:article_id", () => {
     })
   });
 });
+describe("TASK 5 --- GET - /api/articles/:article_id/comments", () => {
+  it('GET - status: 200 - responds with JSON object of all comments for a chosen article', () => {
+    return request(app)
+    .get(`/api/articles/1/comments`)
+        .expect(200)
+        .then((response) => {
+          expect(response.body.comments.length).toBe(11)
+          response.body.comments.forEach((comment) => {
+            expect(typeof comment.comment_id).toBe("number")
+            expect(typeof comment.votes).toBe("number")
+            expect(typeof comment.created_at).toBe("string")
+            expect(typeof comment.author).toBe("string")
+            expect(typeof comment.body).toBe("string")
+            expect(typeof comment.article_id).toBe("number")
+          })
+        })
+  });
+})
