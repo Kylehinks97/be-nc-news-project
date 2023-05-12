@@ -98,8 +98,10 @@ describe('TASK 5 --- GET - /api/articles', () => {
     .get(`/api/articles`)
     .expect(200)
     .then((response) => {
+      expect(response.body.articles.length).toBe(12)
       response.body.articles.forEach((item) => {
         if (item.article_id === 1) {
+          expect(response.body.articles.length).toBe(12)
           expect(item.comment_count).toBe("11")
         }
       })
