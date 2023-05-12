@@ -1,4 +1,4 @@
-const { app } = require("./app.js");
+const { app } = require("./db/app.js");
 
 app.listen(9090, (err) => {
     console.log("in the controller");
