@@ -1,5 +1,5 @@
 //models
-const { selectTopics, selectArticleById, selectCommentsByArticleId } = require("./models.js");
+const { selectTopics, selectArticleById, selectArticles, selectCommentsByArticleId } = require("./models.js");
 const fs = require("fs");
 
 exports.getTopics = (req, res) => {
@@ -42,6 +42,16 @@ exports.getCommentsByArticleId = (req, res, next) => {
     res.status(200).send({ comments: result })
   })
   .catch((err) => {
+    next(err)
+  })
+}
+exports.getArticles = (req, res, next) => {
+  selectArticles()
+  .then((articles) => {
+    res.status(200).send({ articles: articles })
+  })
+  .catch((err) => {
+    console.log("in catch");
     next(err)
   })
 }
