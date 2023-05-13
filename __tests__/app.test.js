@@ -12,7 +12,7 @@ afterAll(() => {
   return connection.end();
 });
 describe("TASK 3 -- api/topics", () => {
-  it("GET - status: 200 - responds with array of snacks", () => {
+  it("GET - status: 200 - responds with array of topics", () => {
     return request(app)
       .get("/api/topics")
       .then((response) => {
@@ -23,12 +23,12 @@ describe("TASK 3 -- api/topics", () => {
         });
       });
   });
-  it('GET - status: 404 - responds with "404 - Not Found', () => {
+  it('GET - status: 400 - responds with "400 - Bad Request', () => {
     return request(app)
       .get("/api/incorrecturl")
       .then((response) => {
-        expect(response.statusCode).toBe(404);
-        expect(response.text).toBe("404 - Not Found");
+        expect(response.statusCode).toBe(400);
+        expect(response.text).toBe("Bad Request");
       });
   });
 });
@@ -63,7 +63,8 @@ describe("TASK 4 --- GET - /api/articles/:article_id", () => {
     .get(`/api/articles/nonsense`)
     .expect(400)
     .then((response) => {
-      expect(response.body).toEqual({ msg: "Invalid Request" })
+      console.log(response);
+      expect(response.text).toBe("Bad Request")
     })
   });
   it(`GET - status: 404 - responds with error message explaining it was a valid request, but doesn't exist`, () => {
@@ -119,7 +120,7 @@ describe('TASK 5 --- GET - /api/articles', () => {
   });
 });
 describe("TASK 6 --- GET - /api/articles/:article_id/comments", () => {
-  it('GET - status: 200 - responds with JSON object of all comments for a chosen article', () => {
+  it('GET - status: 200 - responds with array of all comments for a chosen article', () => {
     return request(app)
     .get(`/api/articles/1/comments`)
         .expect(200)
@@ -135,4 +136,29 @@ describe("TASK 6 --- GET - /api/articles/:article_id/comments", () => {
           })
         })
   });
+  it('GET - status: 200 - responds with empty array if there are no comments', () => {
+    return request(app)
+    .get(`/api/articles/8/comments`)
+    .expect(200)
+    .then((response) => {
+      expect(response.body.comments).toEqual([])
+    })
+  });
+  it('GET - status: 400 - responds with error message if id is invalid', () => {
+    return request(app)
+    .get(`/api/articles/nonsense/comments`)
+    .expect(400)
+    .then((response) => {
+      expect(response.text).toEqual(`Bad Request`)
+    })
+  });
+  it('GET - status: 404 - responds with error message if id is valid but not found', () => {
+    return request(app)
+    .get(`/api/articles/99999/comments`)
+    .expect(404)
+    .then((response) => {
+      console.log(response);
+      expect(response.body.msg).toEqual(`404 - Not Found`)
+    })
+})
 })

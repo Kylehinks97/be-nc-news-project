@@ -27,6 +27,10 @@ exports.getArticleById = (req, res, next) => {
   const id = req.params.article_id;
   selectArticleById(id)
     .then((result) => {
+      console.log(result, "<-- result in controller");
+     if (Object.keys(result).length === 0) {
+      res.status(400).send({msg: "Invalid Request"})
+     }
       res.status(200).send({ article: result });
     })
     .catch((err) => {
@@ -34,11 +38,13 @@ exports.getArticleById = (req, res, next) => {
     });
 };
 exports.getCommentsByArticleId = (req, res, next) => {
-  console.log("in controller");
   const id = req.params.article_id
   selectCommentsByArticleId(id)
   .then((result) => {
     console.log(result);
+    // if (result.length === 0) {
+    //   res.status(400).send({msg: `Invalid Request`})
+    // }
     res.status(200).send({ comments: result })
   })
   .catch((err) => {
@@ -51,7 +57,6 @@ exports.getArticles = (req, res, next) => {
     res.status(200).send({ articles: articles })
   })
   .catch((err) => {
-    console.log("in catch");
     next(err)
   })
 }
