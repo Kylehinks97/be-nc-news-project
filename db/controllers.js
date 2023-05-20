@@ -1,5 +1,12 @@
 //models
-const { selectTopics, selectArticleById, selectArticles, selectCommentsByArticleId } = require("./models.js");
+const {
+  selectTopics,
+  selectArticleById,
+  selectArticles,
+  selectCommentsByArticleId,
+  updateComments,
+  updateVotes,
+} = require("./models.js");
 const fs = require("fs");
 
 exports.getTopics = (req, res) => {
@@ -27,36 +34,62 @@ exports.getArticleById = (req, res, next) => {
   const id = req.params.article_id;
   selectArticleById(id)
     .then((result) => {
-      console.log(result, "<-- result in controller");
-     if (Object.keys(result).length === 0) {
-      res.status(400).send({msg: "Invalid Request"})
-     }
+      if (Object.keys(result).length === 0) {
+        res.status(400).send({ msg: "Invalid Request" });
+      }
       res.status(200).send({ article: result });
     })
     .catch((err) => {
       next(err);
     });
 };
-exports.getCommentsByArticleId = (req, res, next) => {
-  const id = req.params.article_id
-  selectCommentsByArticleId(id)
-  .then((result) => {
-    console.log(result);
-    // if (result.length === 0) {
-    //   res.status(400).send({msg: `Invalid Request`})
-    // }
-    res.status(200).send({ comments: result })
-  })
-  .catch((err) => {
-    next(err)
-  })
-}
 exports.getArticles = (req, res, next) => {
   selectArticles()
-  .then((articles) => {
-    res.status(200).send({ articles: articles })
+    .then((articles) => {
+      res.status(200).send({ articles: articles });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+exports.getCommentsByArticleId = (req, res, next) => {
+  const id = req.params.article_id;
+  selectCommentsByArticleId(id)
+    .then((result) => {
+      // if (result.length === 0) {
+      //   res.status(400).send({msg: `Invalid Request`})
+      // }
+      res.status(200).send({ comments: result });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+exports.postComment = (req, res, next) => {
+  console.log("in last controller");
+  const id = req.params.article_id;
+  const { author, body } = req.body;
+  console.log(req.body, "<-- req.body");
+  updateComments(author, body, id)
+    .then((result) => {
+      if (result.status === 404) {
+        return res.status(404).send({ msg: `Not Found` });
+      } else if (result.status === 400) {
+        return res.status(400).send({ msg: "Invalid Request" });
+      }
+      return res.status(201).send({ comment: result });
+    })
+    .catch(next);
+};
+exports.patchVotes = (req, res, next) => {
+  console.log("in the controller");
+  const id = req.params.article_id;
+  const votes = req.body;
+  updateVotes(id, votes)
+  .then((result) => {
+    console.log(result, "<-- updated Article");
+    res.status(200)
+    res.send({ article: result })
   })
-  .catch((err) => {
-    next(err)
-  })
-}
+  .catch(next)
+};

@@ -13,14 +13,11 @@ exports.selectTopics = () => {
 };
 exports.selectArticleById = (id) => {
   return db
-    .query(`SELECT * FROM articles WHERE article_id = $1`,
-      [id]
-    )
+    .query(`SELECT * FROM articles WHERE article_id = $1`, [id])
     .then((result) => {
       if (result.rows.length === 0) {
         return Promise.reject({ status: 404, msg: "Not Found" });
       } else {
-        // console.log(result.rows[0], "<-- result.rows[0]");
         return result.rows[0];
       }
     });
@@ -42,22 +39,57 @@ exports.selectArticles = () => {
     });
 };
 exports.selectCommentsByArticleId = (id) => {
-  return db.query(`
+  return db
+    .query(
+      `
   SELECT * FROM articles WHERE article_id = $1;
-  `, [id])
-  .then((result) => {
-    if (!result.rows.length) {
-      return Promise.reject({status: 404, msg: "404 - Not Found"})
-    } else {
-    return db
-      .query(
-        `SELECT comments.comment_id, comments.votes, comments.created_at, comments.author, comments.body, comments.article_id FROM comments WHERE article_id = $1 ORDER BY comments.created_at;`,
-        [id]
-      )
-      .then((result) => {
-        console.log(result);
-        return result.rows;
-      })
-    }
-  })
+  `,
+      [id]
+    )
+    .then((result) => {
+      if (!result.rows.length) {
+        return Promise.reject({ status: 404, msg: "404 - Not Found" });
+      } else {
+        return db
+          .query(
+            `SELECT comments.comment_id, comments.votes, comments.created_at, comments.author, comments.body, comments.article_id FROM comments WHERE article_id = $1 ORDER BY comments.created_at;`,
+            [id]
+          )
+          .then((result) => {
+            return result.rows;
+          });
+      }
+    });
 };
+exports.updateComments = (author, body, article_id) => {
+  
+    return db.query(`SELECT * FROM articles WHERE article_id = $1;`, [article_id]).then(
+      (result) => {
+        if (result.rows.length === 0) {
+          return Promise.reject({ status: 404, msg: `Not Found` });
+        }
+        return db
+          .query(
+            `INSERT INTO comments (author, body, article_id) VALUES ($1, $2, $3) RETURNING *;`,
+            [author, body, article_id]
+          )
+          .then(({ rows }) => {
+            return rows;
+          });
+      }
+    );
+};
+exports.updateVotes = (id, votes) => {
+  console.log(id);
+  console.log(votes.inc_votes);
+  const votesNumber = votes.inc_votes
+  return db.query(`SELECT * FROM articles WHERE article_id = $1;`, [id]).then((result) => {
+    if (result.rows.length === 0) {
+      return Promise.reject({ status: 404, msg: `Not Found` });
+    }
+    return db.query(`UPDATE articles SET votes = votes + $1 WHERE article_id = $2 returning*;`, [votesNumber, id]).then((result) => {
+      return result.rows[0]
+    })
+  })
+
+}
