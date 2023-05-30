@@ -1,5 +1,5 @@
-const express = require("express");
 const cors = require('cors');
+const express = require("express");
 const app = express();
 const {
   getTopics,
@@ -11,9 +11,9 @@ const {
   patchVotes
 } = require("./controllers");
 
+app.use(cors());
 app.use(express.json());
 
-app.use(cors());
 
 app.get(`/api/topics`, getTopics);
 app.get(`/api`, getEndpoints);

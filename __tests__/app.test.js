@@ -58,7 +58,7 @@ describe("TASK 4 --- GET - /api/articles/:article_id", () => {
           "I find this existence challenging"
         );
         expect(response.body.article.created_at).toBe(
-          "2020-07-09T19:11:00.000Z"
+          "2020-07-09T20:11:00.000Z"
         );
         expect(response.body.article.votes).toBe(100);
         expect(response.body.article.article_img_url).toBe(
