@@ -6,6 +6,7 @@ const {
   selectCommentsByArticleId,
   updateComments,
   updateVotes,
+  removeComment
 } = require("./models.js");
 const fs = require("fs");
 
@@ -93,3 +94,11 @@ exports.patchVotes = (req, res, next) => {
   })
   .catch(next)
 };
+exports.deleteComment = (req, res, next) => {
+  const comment_id = req.params.comment_id
+  console.log(comment_id);
+  removeComment(comment_id).then((result) => {
+    console.log("back in controller");
+    res.sendStatus(204)
+  })
+}

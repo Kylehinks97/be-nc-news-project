@@ -255,3 +255,10 @@ describe("TASK 8 --- PATCH - api/articles/:article_id", () => {
     })
   });
 });
+describe('TASK8 --- DELETE - api/comments/:comment_id', () => {
+  it('DELETE - STATUS: 204 - responds with nothing', () => {
+    return request(app)
+    .delete(`/api/comments/5`)
+    .expect(204)
+  });
+});

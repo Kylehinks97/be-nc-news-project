@@ -93,3 +93,13 @@ exports.updateVotes = (id, votes) => {
   })
 
 }
+exports.removeComment = (comment_id) => {
+  console.log(`in the model`);
+  console.log(comment_id,`in the model`);
+  return db.query(`
+  DELETE FROM comments WHERE comment_id = $1;
+  `, [comment_id]).then((result) => {
+    console.log(result);
+    return result
+  })
+}
