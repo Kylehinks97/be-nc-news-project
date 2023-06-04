@@ -62,44 +62,45 @@ exports.selectCommentsByArticleId = (id) => {
     });
 };
 exports.updateComments = (author, body, article_id) => {
-  
-    return db.query(`SELECT * FROM articles WHERE article_id = $1;`, [article_id]).then(
-      (result) => {
-        if (result.rows.length === 0) {
-          return Promise.reject({ status: 404, msg: `Not Found` });
-        }
-        return db
-          .query(
-            `INSERT INTO comments (author, body, article_id) VALUES ($1, $2, $3) RETURNING *;`,
-            [author, body, article_id]
-          )
-          .then(({ rows }) => {
-            return rows;
-          });
+  return db
+    .query(`SELECT * FROM articles WHERE article_id = $1;`, [article_id])
+    .then((result) => {
+      if (result.rows.length === 0) {
+        return Promise.reject({ status: 404, msg: `Not Found` });
       }
-    );
+      return db
+        .query(
+          `INSERT INTO comments (author, body, article_id) VALUES ($1, $2, $3) RETURNING *;`,
+          [author, body, article_id]
+        )
+        .then(({ rows }) => {
+          return rows;
+        });
+    });
 };
 exports.updateVotes = (id, votes) => {
   console.log(id);
   console.log(votes.inc_votes);
-  const votesNumber = votes.inc_votes
-  return db.query(`SELECT * FROM articles WHERE article_id = $1;`, [id]).then((result) => {
-    if (result.rows.length === 0) {
-      return Promise.reject({ status: 404, msg: `Not Found` });
-    }
-    return db.query(`UPDATE articles SET votes = votes + $1 WHERE article_id = $2 returning*;`, [votesNumber, id]).then((result) => {
-      return result.rows[0]
-    })
-  })
-
-}
+  const votesNumber = votes.inc_votes;
+  return db
+    .query(`SELECT * FROM articles WHERE article_id = $1;`, [id])
+    .then((result) => {
+      if (result.rows.length === 0) {
+        return Promise.reject({ status: 404, msg: `Not Found` });
+      }
+      return db
+        .query(
+          `UPDATE articles SET votes = votes + $1 WHERE article_id = $2 returning*;`,
+          [votesNumber, id]
+        )
+        .then((result) => {
+          return result.rows[0];
+        });
+    });
+};
 exports.removeComment = (comment_id) => {
-  console.log(`in the model`);
-  console.log(comment_id,`in the model`);
-  return db.query(`
-  DELETE FROM comments WHERE comment_id = $1;
-  `, [comment_id]).then((result) => {
-    console.log(result);
-    return result
-  })
-}
+  console.log(comment_id);
+  const deleteCommentQuery = `DELETE FROM comments WHERE comment_id = $1;`;
+    return db.query(deleteCommentQuery, [comment_id]);
+};
+

@@ -98,7 +98,7 @@ exports.deleteComment = (req, res, next) => {
   const comment_id = req.params.comment_id
   console.log(comment_id);
   removeComment(comment_id).then((result) => {
-    console.log("back in controller");
+    console.log(result, "back in controller");
     res.sendStatus(204)
   })
 }

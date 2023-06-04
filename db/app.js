@@ -23,7 +23,7 @@ app.get(`/api/articles`, getArticles);
 app.get(`/api/articles/:article_id/comments`, getCommentsByArticleId)
 app.post(`/api/articles/:article_id/comments`, postComment)
 app.patch(`/api/articles/:article_id`, patchVotes)
-app.delete(`/api/articles/article_id/comments/:comment_id`, deleteComment)
+app.delete(`/api/comments/:comment_id`, deleteComment)
 
 app.use((err, req, res, next) => {
   if (err.status && err.msg) {
