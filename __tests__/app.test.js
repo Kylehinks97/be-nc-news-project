@@ -265,7 +265,7 @@ describe('TASK9 --- DELETE - api/comments/:comment_id', () => {
 describe('TASK10 --- GET - api/users', () => {
   it('should return an array of all the users', () => {
     return request(app)
-    .get(`api/users`)
+    .get(`/api/users`)
     .expect(200)
     // .then((result) => {
     //   expect(result)

@@ -105,6 +105,6 @@ exports.deleteComment = (req, res, next) => {
 }
 exports.getUsers = (req, res, next) => {
   selectUsers().then((result) => {
-    res.status(200).send({ users: result})
+    res.status(200).send({ users: result.rows})
   })
 }
