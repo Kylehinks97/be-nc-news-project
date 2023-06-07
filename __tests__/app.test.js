@@ -255,10 +255,20 @@ describe("TASK 8 --- PATCH - api/articles/:article_id", () => {
     })
   });
 });
-describe.only('TASK9 --- DELETE - api/comments/:comment_id', () => {
+describe('TASK9 --- DELETE - api/comments/:comment_id', () => {
   it('DELETE - STATUS: 204 - responds with nothing', () => {
     return request(app)
     .delete(`/api/comments/5`)
     .expect(204)
+  });
+});
+describe('TASK10 --- GET - api/users', () => {
+  it('should return an array of all the users', () => {
+    return request(app)
+    .get(`api/users`)
+    .expect(200)
+    // .then((result) => {
+    //   expect(result)
+    // })
   });
 });

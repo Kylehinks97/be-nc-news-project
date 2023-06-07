@@ -9,7 +9,8 @@ const {
   getCommentsByArticleId,
   postComment,
   patchVotes,
-  deleteComment
+  deleteComment,
+  getUsers
 } = require("./controllers");
 
 app.use(cors());
@@ -24,6 +25,7 @@ app.get(`/api/articles/:article_id/comments`, getCommentsByArticleId)
 app.post(`/api/articles/:article_id/comments`, postComment)
 app.patch(`/api/articles/:article_id`, patchVotes)
 app.delete(`/api/comments/:comment_id`, deleteComment)
+app.get(`/api/users`, getUsers)
 
 app.use((err, req, res, next) => {
   if (err.status && err.msg) {

@@ -103,4 +103,6 @@ exports.removeComment = (comment_id) => {
   const deleteCommentQuery = `DELETE FROM comments WHERE comment_id = $1;`;
     return db.query(deleteCommentQuery, [comment_id]);
 };
-
+exports.selectUsers = () => {
+  return db.query(`SELECT * FROM users;`)
+}

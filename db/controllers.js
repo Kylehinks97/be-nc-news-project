@@ -6,7 +6,8 @@ const {
   selectCommentsByArticleId,
   updateComments,
   updateVotes,
-  removeComment
+  removeComment,
+  selectUsers
 } = require("./models.js");
 const fs = require("fs");
 
@@ -100,5 +101,10 @@ exports.deleteComment = (req, res, next) => {
   removeComment(comment_id).then((result) => {
     console.log(result, "back in controller");
     res.sendStatus(204)
+  })
+}
+exports.getUsers = (req, res, next) => {
+  selectUsers().then((result) => {
+    res.status(200).send({ users: result})
   })
 }
