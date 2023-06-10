@@ -84,6 +84,16 @@ describe("TASK 4 --- GET - /api/articles/:article_id", () => {
   });
 });
 describe("TASK 5 --- GET - /api/articles", () => {
+  it("should return cat articles when the query is made to football articles", () => {
+    return request(app)
+      .get(`/api/articles?topic=cats&sortby=created_at&order=desc`)
+      .expect(200)
+      .then((result) => {
+        result.body.articles.forEach((article) => {
+          expect(article.topic).toBe("cats");
+        });
+      });
+  });
   it("GET - status: 200 - returns array of articles that have the correct shape and data-types", () => {
     return request(app)
       .get(`/api/articles`)
@@ -235,40 +245,41 @@ describe("TASK 8 --- PATCH - api/articles/:article_id", () => {
       .then((result) => {
         expect(result.body.msg).toBe(`Not Found`);
       });
-  })
+  });
   it("PATCH - status: 400 - responds with correct error message when given invalid article_id", () => {
     return request(app)
-    .patch(`/api/articles/nonsense`)
-    .send({ inc_votes: 10 })
-    .expect(400)
-    .then((result) => {
-      expect(result.body.msg).toBe("Invalid Request")
-    })
+      .patch(`/api/articles/nonsense`)
+      .send({ inc_votes: 10 })
+      .expect(400)
+      .then((result) => {
+        expect(result.body.msg).toBe("Invalid Request");
+      });
   });
-  it('PATCH - status: 400 - responds with correct error message when given a empty object', () => {
+  it("PATCH - status: 400 - responds with correct error message when given a empty object", () => {
     return request(app)
-    .patch(`/api/articles/nonsense`)
-    .send({})
-    .expect(400)
-    .then((result) => {
-      expect(result.body.msg).toBe("Invalid Request")
-    })
-  });
-});
-describe('TASK9 --- DELETE - api/comments/:comment_id', () => {
-  it('DELETE - STATUS: 204 - responds with nothing', () => {
-    return request(app)
-    .delete(`/api/comments/5`)
-    .expect(204)
+      .patch(`/api/articles/nonsense`)
+      .send({})
+      .expect(400)
+      .then((result) => {
+        expect(result.body.msg).toBe("Invalid Request");
+      });
   });
 });
-describe('TASK10 --- GET - api/users', () => {
-  it('should return an array of all the users', () => {
-    return request(app)
-    .get(`/api/users`)
-    .expect(200)
+describe("TASK9 --- DELETE - api/comments/:comment_id", () => {
+  it("DELETE - STATUS: 204 - responds with nothing", () => {
+    return request(app).delete(`/api/comments/5`).expect(204);
+  });
+});
+describe("TASK10 --- GET - api/users", () => {
+  it("should return an array of all the users", () => {
+    return request(app).get(`/api/users`).expect(200);
     // .then((result) => {
     //   expect(result)
     // })
+  });
+});
+describe("TASK11 --- GET - api/users/", () => {
+  it("should return all articles when the query is made to articles", () => {
+    return request(app).get(`/api/articles`).expect(200);
   });
 });

@@ -22,7 +22,16 @@ exports.selectArticleById = (id) => {
       }
     });
 };
-exports.selectArticles = () => {
+exports.selectArticles = (topic, sortBy, order) => {
+  if(topic || sortBy || order) {
+    console.log("in the if");
+    return db.query(`SELECT * FROM articles WHERE topic = $1 GROUP BY articles.article_id ORDER BY articles.${sortBy} ${order}`, [topic]).then((result) => {
+      console.log(result);
+      return result
+    }).catch((err) => {
+      console.log("error with query");
+    }) 
+  }
   return db
     .query(
       `
@@ -101,8 +110,10 @@ exports.updateVotes = (id, votes) => {
 exports.removeComment = (comment_id) => {
   console.log(comment_id);
   const deleteCommentQuery = `DELETE FROM comments WHERE comment_id = $1;`;
-    return db.query(deleteCommentQuery, [comment_id]);
+  return db.query(deleteCommentQuery, [comment_id]);
 };
 exports.selectUsers = () => {
-  return db.query(`SELECT * FROM users;`)
-}
+  return db.query(`SELECT * FROM users;`);
+};
+
+

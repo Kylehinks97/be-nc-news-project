@@ -7,7 +7,8 @@ const {
   updateComments,
   updateVotes,
   removeComment,
-  selectUsers
+  selectUsers,
+  selectUsersByQuery,
 } = require("./models.js");
 const fs = require("fs");
 
@@ -46,6 +47,8 @@ exports.getArticleById = (req, res, next) => {
     });
 };
 exports.getArticles = (req, res, next) => {
+
+if (Object.keys(req.query).length === 0) {
   selectArticles()
     .then((articles) => {
       res.status(200).send({ articles: articles });
@@ -53,6 +56,14 @@ exports.getArticles = (req, res, next) => {
     .catch((err) => {
       next(err);
     });
+  } else {
+    const topic = req.query.topic || null;
+    const sortBy = req.query.sortby || 'created_at';
+    const order = req.query.order || 'desc';
+  selectArticles(topic, sortBy, order).then((result) => {
+    res.status(200).send({ articles: result.rows})
+  })
+  }
 };
 exports.getCommentsByArticleId = (req, res, next) => {
   const id = req.params.article_id;
@@ -106,5 +117,18 @@ exports.deleteComment = (req, res, next) => {
 exports.getUsers = (req, res, next) => {
   selectUsers().then((result) => {
     res.status(200).send({ users: result.rows})
+  })
+}
+
+exports.getArticlesByQuery = (req, res, next) => {
+  const topic = req.query.topic || null;
+  const sortBy = req.query.sort_by || 'date';
+  const order = req.query.order || 'desc';
+
+  console.log(topic, sortBy, order);
+  selectUsersByQuery(topic, sortBy, order)
+    .then((result) => {
+      console.log(result.rows);
+    res.status(200).send({articles: result.rows})
   })
 }

@@ -10,7 +10,8 @@ const {
   postComment,
   patchVotes,
   deleteComment,
-  getUsers
+  getUsers,
+  getArticlesByQuery
 } = require("./controllers");
 
 app.use(cors());
